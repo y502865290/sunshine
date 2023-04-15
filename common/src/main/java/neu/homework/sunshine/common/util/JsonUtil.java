@@ -18,4 +18,15 @@ public class JsonUtil {
         }
         return json;
     }
+
+    public static <T> T toClass(String json,Class<T> c){
+        ObjectMapper objectMapper = new ObjectMapper();
+        T result = null;
+        try {
+            result = objectMapper.readValue(json,c);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        return result;
+    }
 }

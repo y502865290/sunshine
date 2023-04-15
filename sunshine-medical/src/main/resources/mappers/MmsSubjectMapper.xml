@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="neu.homework.sunshine.medical.mapper.MmsSubjectMapper">
+
+    <select id="getById" resultMap="fatherNameMap">
+        SELECT a.*,c.name AS fatherName FROM mms_subject AS a JOIN mms_subject AS c ON a.father = c.id WHERE a.id = #{id}
+    </select>
+
+    <resultMap id="fatherNameMap" type="MmsSubject">
+        <id property="id" column="id"></id>
+        <result property="name" column="name"></result>
+        <result property="level" column="level"></result>
+        <result property="father" column="father"></result>
+        <result property="fatherName" column="fatherName"></result>
+    </resultMap>
+</mapper>

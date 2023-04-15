@@ -1,0 +1,30 @@
+server:
+  port: 7001
+
+spring:
+  application:
+    name: sunshine-medical
+  cloud:
+    polaris:
+      address: grpc://139.180.132.199:5002
+      namespace: default
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://2001:19f0:4401:e48:5400:04ff:fe5d:6801:5000/sunshine_mms?useUnicode=true&characterEncoding=utf8
+    password: root
+    username: root
+  rabbitmq:
+    host: 139.180.132.199
+    port: 5672
+    virtual-host: /
+    username: guest
+    password: guest
+mybatis-plus:
+  mapper-locations: classpath:mappers/*.xml
+  type-aliases-package: neu.homework.sunshine.medical.domain
+
+elasticsearch:
+  url: 139.180.132.199
+  port: 5003
+
+

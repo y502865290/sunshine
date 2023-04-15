@@ -7,7 +7,7 @@ import neu.homework.sunshine.common.util.JsonUtil;
 import neu.homework.sunshine.common.validate.AddGroup;
 import neu.homework.sunshine.common.validate.Validate;
 import neu.homework.sunshine.ums.domain.UmsUser;
-import neu.homework.sunshine.ums.service.myInterface.UserService;
+import neu.homework.sunshine.ums.service.interfaces.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;

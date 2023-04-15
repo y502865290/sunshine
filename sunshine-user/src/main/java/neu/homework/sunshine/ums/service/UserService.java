@@ -8,11 +8,8 @@ import neu.homework.sunshine.ums.mapper.UserMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-
 @Service
-public class UserService implements neu.homework.sunshine.ums.service.myInterface.UserService {
+public class UserService implements neu.homework.sunshine.ums.service.interfaces.UserService {
     @Resource
     private UserMapper userMapper;
 

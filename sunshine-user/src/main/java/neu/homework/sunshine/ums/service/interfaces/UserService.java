@@ -1,4 +1,4 @@
-package neu.homework.sunshine.ums.service.myInterface;
+package neu.homework.sunshine.ums.service.interfaces;
 
 import neu.homework.sunshine.common.domain.ServiceResult;
 import neu.homework.sunshine.ums.domain.UmsUser;
