@@ -43,6 +43,20 @@ public class Result {
                 '}';
     }
 
+    public static Result tokenInvalid(){
+        Result r = new Result();
+        r.code = ResultCode.TOKEN_INVALID.getCode();
+        r.message = ResultCode.TOKEN_INVALID.getMessage();
+        return r;
+    }
+
+    public static Result tokenExpires(){
+        Result r = new Result();
+        r.code = ResultCode.TOKEN_EXPIRES.getCode();
+        r.message = ResultCode.TOKEN_EXPIRES.getMessage();
+        return r;
+    }
+
     public static Result requestError(){
         Result r = new Result();
         r.code = ResultCode.INVALID_REQUEST.getCode();

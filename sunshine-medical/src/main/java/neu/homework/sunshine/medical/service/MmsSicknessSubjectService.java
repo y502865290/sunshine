@@ -64,4 +64,5 @@ public class MmsSicknessSubjectService implements neu.homework.sunshine.medical.
         TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         return ServiceResult.error();
     }
+
 }

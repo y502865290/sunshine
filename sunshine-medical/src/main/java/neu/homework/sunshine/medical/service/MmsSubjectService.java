@@ -89,6 +89,10 @@ public class MmsSubjectService implements neu.homework.sunshine.medical.service.
         HashMap<Long, SubjectTreeVo.TreeNode> map = new HashMap<>();
         while(iterator.hasNext()){
             MmsSubject item = iterator.next();
+            if(item.getId().equals(-1L)){
+                iterator.remove();
+                continue;
+            }
             if(item.getLevel() == 1){
                 SubjectTreeVo.TreeNode dataItem = new SubjectTreeVo.TreeNode();
                 dataItem.setNode(item);

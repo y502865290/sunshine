@@ -60,4 +60,15 @@ public class MmsSicknessExtraService implements neu.homework.sunshine.medical.se
         return ServiceResult.ok().setData(data);
     }
 
+    @Override
+    public ServiceResult addSicknessExtraBatch(List<MmsSicknessExtra> list) {
+        int result = 0;
+        for(MmsSicknessExtra extra : list){
+            result += sicknessExtraMapper.insert(extra);
+        }
+        if(result == list.size()){
+            return ServiceResult.ok();
+        }
+        return ServiceResult.error();
+    }
 }

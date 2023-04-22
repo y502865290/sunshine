@@ -71,17 +71,29 @@ public class MmsSicknessController {
     }
 
     @GetMapping("/searchWithKeyword")
-    public Result searchWithKeyword(String keyword){
+    public Result searchWithKeyword(String keyword,@RequestParam(defaultValue = "1") Integer pageNum){
+        if(pageNum == null){
+            return Result.requestError();
+        }
         if(keyword == null || "".equals(keyword.trim())){
             return Result.requestError();
         }
-        ServiceResult serviceResult = sicknessService.searchWithKeywordByEs(keyword);
+        ServiceResult serviceResult = sicknessService.searchWithKeywordByEs(keyword,pageNum);
         return Validate.checkServiceAndGetResult(serviceResult);
     }
 
     @PutMapping("/addAllToES")
     public Result addAllToES(){
         ServiceResult serviceResult = sicknessService.addAllToES();
+        return Validate.checkServiceAndGetResult(serviceResult);
+    }
+
+    @GetMapping("/getSicknessDetail")
+    public Result getSicknessDetail(Long id){
+        if(id == null){
+            return Result.requestError();
+        }
+        ServiceResult serviceResult = sicknessService.getSicknessDetail(id);
         return Validate.checkServiceAndGetResult(serviceResult);
     }
 

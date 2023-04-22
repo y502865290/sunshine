@@ -6,11 +6,14 @@ import neu.homework.sunshine.common.domain.ServiceResult;
 import neu.homework.sunshine.common.util.JsonUtil;
 import neu.homework.sunshine.common.validate.AddGroup;
 import neu.homework.sunshine.common.validate.Validate;
+import neu.homework.sunshine.medical.domain.MmsSickness;
 import neu.homework.sunshine.medical.domain.MmsSicknessExtra;
 import neu.homework.sunshine.medical.service.interfaces.MmsSicknessExtraService;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/mms/sicknessExtra")
@@ -61,6 +64,15 @@ public class MmsSicknessExtraController {
             return Result.requestError();
         }
         ServiceResult serviceResult = sicknessExtraService.getByFrom(sickness);
+        return Validate.checkServiceAndGetResult(serviceResult);
+    }
+
+    @PutMapping("/addSicknessExtraBatch")
+    public Result addSicknessExtraBatch(@RequestBody List<MmsSicknessExtra> data){
+        if(data == null){
+            return Result.requestError();
+        }
+        ServiceResult serviceResult = sicknessExtraService.addSicknessExtraBatch(data);
         return Validate.checkServiceAndGetResult(serviceResult);
     }
 }

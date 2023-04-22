@@ -1,6 +1,7 @@
 package neu.homework.sunshine.common.validate;
 
 import neu.homework.sunshine.common.domain.Result;
+import neu.homework.sunshine.common.domain.ResultCode;
 import neu.homework.sunshine.common.domain.ServiceResult;
 import neu.homework.sunshine.common.domain.ServiceResultCode;
 import org.springframework.validation.BindingResult;
@@ -29,6 +30,10 @@ public class Validate {
             return Result.error().setMessage(serviceResult.getMessage()).setData(serviceResult.getData());
         }else if(serviceResult.getCode().equals(ServiceResultCode.REQUEST_ERROR.getCode())){
             return Result.requestError().setMessage(serviceResult.getMessage()).setData(serviceResult.getData());
+        }else if(serviceResult.getCode().equals(ServiceResultCode.TOKEN_INVALID.getCode())){
+            return Result.tokenInvalid().setMessage(serviceResult.getMessage()).setData(serviceResult.getCode());
+        }else if(serviceResult.getCode().equals(ServiceResultCode.TOKEN_EXPIRES.getCode())){
+            return Result.tokenExpires().setMessage(serviceResult.getMessage()).setData(serviceResult.getCode());
         }
         return Result.error().setMessage("未知错误异常");
     }
@@ -51,4 +56,5 @@ public class Validate {
         }
         return null;
     }
+
 }

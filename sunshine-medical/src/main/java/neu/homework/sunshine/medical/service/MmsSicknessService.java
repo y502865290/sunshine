@@ -13,11 +13,14 @@ import neu.homework.sunshine.common.domain.RabbitQueue;
 import neu.homework.sunshine.common.domain.ServiceResult;
 import neu.homework.sunshine.common.util.JsonUtil;
 import neu.homework.sunshine.medical.domain.MmsSickness;
+import neu.homework.sunshine.medical.domain.MmsSicknessExtra;
+import neu.homework.sunshine.medical.domain.MmsSubject;
 import neu.homework.sunshine.medical.es.SicknessIndexService;
 import neu.homework.sunshine.medical.mapper.MmsSicknessMapper;
 import neu.homework.sunshine.medical.service.interfaces.MmsSicknessExtraService;
 import neu.homework.sunshine.medical.service.interfaces.MmsSicknessSubjectService;
 import neu.homework.sunshine.medical.util.ElasticsearchUtil;
+import neu.homework.sunshine.medical.vo.SicknessDetailVo;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +48,12 @@ public class MmsSicknessService implements neu.homework.sunshine.medical.service
 
     @Resource
     private SicknessIndexService esService;
+
+    @Resource
+    private MmsSicknessSubjectService mmsSicknessSubjectService;
+
+    @Resource
+    private MmsSicknessExtraService mmsSicknessExtraService;
 
     @Override
     public ServiceResult addSickness(MmsSickness mmsSickness) {
@@ -103,8 +112,22 @@ public class MmsSicknessService implements neu.homework.sunshine.medical.service
     }
 
     @Override
-    public ServiceResult searchWithKeywordByEs(String keyword) {
-        ServiceResult serviceResult = esService.searchInES(keyword);
+    public ServiceResult searchWithKeywordByEs(String keyword,Integer pageNum) {
+        ServiceResult serviceResult = esService.searchInES(keyword,pageNum - 1);
         return serviceResult;
+    }
+
+    @Override
+    public ServiceResult getSicknessDetail(Long id) {
+        ServiceResult subject = mmsSicknessSubjectService.getBySickness(id);
+        String subjectString = (String) ((HashMap<String,Object>)subject.getData()).get("string");
+        SicknessDetailVo detail = new SicknessDetailVo();
+        detail.setSubject(subjectString);
+        ServiceResult extra = sicknessExtraService.getByFrom(id);
+        List<MmsSicknessExtra> list = (List<MmsSicknessExtra>) extra.getData();
+        detail.setExtra(list);
+        MmsSickness main = sicknessMapper.selectById(id);
+        detail.setMain(main);
+        return ServiceResult.ok().setData(detail);
     }
 }

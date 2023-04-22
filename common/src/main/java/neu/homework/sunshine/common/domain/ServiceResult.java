@@ -29,6 +29,11 @@ public class ServiceResult {
         return this;
     }
 
+    public ServiceResult setCode(ServiceResultCode code){
+        this.code = code.getCode();
+        return this;
+    }
+
     public static ServiceResult ok(){
         ServiceResult result = new ServiceResult();
         result.code = ServiceResultCode.SUCCESS.getCode();
@@ -53,8 +58,22 @@ public class ServiceResult {
     public static ServiceResult warning(){
         ServiceResult result = new ServiceResult();
         result.code = ServiceResultCode.WARNING.getCode();
+        result.message = ServiceResultCode.WARNING.getMessage();
         return result;
     }
 
+    public static ServiceResult tokenInvalid(){
+        ServiceResult result = new ServiceResult();
+        result.code = ServiceResultCode.TOKEN_INVALID.getCode();
+        result.message = ServiceResultCode.TOKEN_INVALID.getMessage();
+        return result;
+    }
+
+    public static ServiceResult tokenExpires(){
+        ServiceResult result = new ServiceResult();
+        result.code = ServiceResultCode.TOKEN_EXPIRES.getCode();
+        result.message = ServiceResultCode.TOKEN_EXPIRES.getMessage();
+        return result;
+    }
 
 }

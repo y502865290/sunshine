@@ -12,7 +12,7 @@ spring:
     url: jdbc:mysql://2001:19f0:4401:e48:5400:04ff:fe5d:6801:5000/sunshine_ums?useUnicode=true&characterEncoding=utf8
     password: root
     username: root
+
 mybatis-plus:
   mapper-locations: classpath:mappers/*.xml
   type-aliases-package: neu.homework.sunshine.user.domain
-

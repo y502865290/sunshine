@@ -13,4 +13,5 @@ public interface MmsSicknessSubjectService {
 
     public ServiceResult update(List<MmsSicknessSubject> list,Long sickness);
 
+
 }

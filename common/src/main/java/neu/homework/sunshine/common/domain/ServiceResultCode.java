@@ -1,8 +1,12 @@
 package neu.homework.sunshine.common.domain;
 
 public enum ServiceResultCode {
-    SUCCESS("成功",20),WARNING("警告",10),
-    ERROR("未知错误",30),REQUEST_ERROR("客户端请求异常",40);
+    SUCCESS("成功",20),
+    WARNING("警告",10),
+    ERROR("未知错误",30),
+    REQUEST_ERROR("客户端请求异常",40),
+    TOKEN_INVALID("token无效",41),
+    TOKEN_EXPIRES("token过期",42);
     private String message;
     private Integer code;
 
