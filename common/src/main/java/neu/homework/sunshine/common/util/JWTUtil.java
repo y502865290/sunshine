@@ -2,11 +2,8 @@ package neu.homework.sunshine.common.util;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
 import neu.homework.sunshine.common.domain.ServiceResult;
 import neu.homework.sunshine.common.domain.ServiceResultCode;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.security.KeyPair;
@@ -16,7 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JwtUtil {
+public class JWTUtil {
 
     private static final Integer expires;
 
@@ -72,6 +69,14 @@ public class JwtUtil {
         result.put("refreshToken",refresh);
         result.put("expiresTime",String.valueOf(expiresTime));
         return ServiceResult.ok().setData(result);
+    }
+
+    public static Long getUserId(String token,boolean asymmetric){
+        ServiceResult verify = verify(token,asymmetric);
+        if(verify.getCode().equals(ServiceResultCode.SUCCESS.getCode())){
+            return Long.valueOf ((String) ((Jws<Claims>) ((Map<String,Object>)verify.getData()).get("data")).getBody().get(keys[0]));
+        }
+        return null;
     }
 
     public static ServiceResult verify(String token,boolean asymmetric) {

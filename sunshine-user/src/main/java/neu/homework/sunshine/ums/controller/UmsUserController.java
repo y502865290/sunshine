@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping("/ums/user")
@@ -54,6 +55,7 @@ public class UmsUserController {
 
     @PostMapping("/init")
     @ResponseBody
+    @Check
     public Result init(@RequestBody UmsUser user){
         if(user.getId() == null || user.getPhone() == null || user.getSex() == null){
             return Result.requestError();
@@ -95,5 +97,23 @@ public class UmsUserController {
         }
         ServiceResult serviceResult = userService.getUserInfoByToken(token);
         return Validate.checkServiceAndGetResult(serviceResult);
+    }
+
+    @PostMapping("/uploadAvator")
+    @ResponseBody
+    @Check
+    public Result uploadAvator(@RequestParam("file") MultipartFile multipartFile,HttpServletRequest request) throws ProcessException {
+        if (multipartFile == null){
+            return Result.requestError();
+        }
+        String token = request.getHeader("access-token");
+        if(token == null || "".equals(token)){
+            token = request.getHeader("refresh-token");
+        }
+        if(token == null || "".equals(token)){
+            return Result.tokenInvalid();
+        }
+        ServiceResult uploadResult = userService.uploadAvator(multipartFile,token);
+        return Validate.checkServiceAndGetResult(uploadResult);
     }
 }

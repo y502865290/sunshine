@@ -3,12 +3,11 @@ package neu.homework.sunshine.ums.interceptors;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import neu.homework.sunshine.common.domain.ProcessException;
 import neu.homework.sunshine.common.domain.Result;
 import neu.homework.sunshine.common.domain.ServiceResult;
 import neu.homework.sunshine.common.domain.ServiceResultCode;
 import neu.homework.sunshine.common.util.JsonUtil;
-import neu.homework.sunshine.common.util.JwtUtil;
+import neu.homework.sunshine.common.util.JWTUtil;
 import neu.homework.sunshine.common.validate.Check;
 import neu.homework.sunshine.ums.service.interfaces.UmsUserService;
 import org.springframework.web.method.HandlerMethod;
@@ -45,17 +44,17 @@ public class TokenInterceptor implements HandlerInterceptor {
             writer.close();
             return false;
         }
-        ServiceResult serviceResult = JwtUtil.verify(token,JwtUtil.asymmetric);
+        ServiceResult serviceResult = JWTUtil.verify(token, JWTUtil.asymmetric);
         HashMap<String,String> message = (HashMap<String, String>) serviceResult.getData();
-        if(message.get("result").equals(JwtUtil.TOKEN_VALID)){
+        if(message.get("result").equals(JWTUtil.TOKEN_VALID)){
             return true;
-        }else if(message.get("result").equals(JwtUtil.TOKEN_INVALID)){
+        }else if(message.get("result").equals(JWTUtil.TOKEN_INVALID)){
             Result r = Result.tokenInvalid();
             PrintWriter writer = response.getWriter();
             writer.print(JsonUtil.toJson(r));
             writer.close();
             return false;
-        }else if(message.get("result").equals(JwtUtil.TOKEN_EXPIRES)){
+        }else if(message.get("result").equals(JWTUtil.TOKEN_EXPIRES)){
             String refreshToken = request.getHeader("refresh-token");
             if(refreshToken == null || "".equals(refreshToken)){
                 Result r = Result.tokenExpires();
@@ -64,9 +63,9 @@ public class TokenInterceptor implements HandlerInterceptor {
                 writer.close();
                 return false;
             }else {
-                ServiceResult refreshTokenResult = JwtUtil.verify(refreshToken,JwtUtil.asymmetric);
+                ServiceResult refreshTokenResult = JWTUtil.verify(refreshToken, JWTUtil.asymmetric);
                 if(refreshTokenResult.getCode().equals(ServiceResultCode.SUCCESS.getCode())){
-                    ServiceResult newToken = JwtUtil.renewal(refreshToken,JwtUtil.asymmetric);
+                    ServiceResult newToken = JWTUtil.renewal(refreshToken, JWTUtil.asymmetric);
                     Map<String,String> newTokenResult = (Map<String, String>) newToken.getData();
                     response.setHeader("access-token",newTokenResult.get("accessToken"));
                     response.setHeader("refresh-token",newTokenResult.get("refreshToken"));

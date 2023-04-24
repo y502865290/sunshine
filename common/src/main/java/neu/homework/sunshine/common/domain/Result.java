@@ -81,7 +81,12 @@ public class Result {
         return this;
     }
 
-    public Result setCode(ResultCode code){
+    public Result setCode(Integer code){
+        this.code = code;
+        return this;
+    }
+
+    public Result setResultCode(ResultCode code){
         this.code = code.getCode();
         return this;
     }

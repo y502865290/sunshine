@@ -3,6 +3,7 @@ package neu.homework.sunshine.ums.service.interfaces;
 import neu.homework.sunshine.common.domain.ProcessException;
 import neu.homework.sunshine.common.domain.ServiceResult;
 import neu.homework.sunshine.ums.domain.UmsUser;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface UmsUserService {
     public ServiceResult signUp(UmsUser umsUser);
@@ -17,4 +18,5 @@ public interface UmsUserService {
 
     public ServiceResult getUserInfoByToken(String token);
 
+    ServiceResult uploadAvator(MultipartFile file, String token) throws ProcessException;
 }

@@ -1,0 +1,15 @@
+server:
+  port: 7003
+spring:
+  application:
+    name: third-party
+  cloud:
+    polaris:
+      address: grpc://139.180.132.199:5002
+      namespace: default
+ftp:
+  host: 139.180.132.199
+  port: 21
+  username: file
+  password: Yong2170419853+
+  mode: PORT

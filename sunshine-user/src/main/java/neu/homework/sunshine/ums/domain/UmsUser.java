@@ -7,18 +7,20 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 import lombok.Data;
+import lombok.ToString;
 import neu.homework.sunshine.common.validate.AddGroup;
 import neu.homework.sunshine.common.validate.UpdateGroup;
 
 @TableName(value = "ums_user")
 @Data
+@ToString
 public class UmsUser {
     @Null(message = "注册的时候id必须为空",groups = {AddGroup.class})
     @NotNull(message = "id不能为空",groups = {UpdateGroup.class})
     @TableId(type = IdType.AUTO)
     private Long id;
 
-    @NotBlank(message = "用户名不能为空",groups = {UpdateGroup.class,AddGroup.class})
+    @NotBlank(message = "用户名不能为空",groups = {AddGroup.class})
     private String username;
 
     @NotBlank(message = "密码不能为空",groups = {AddGroup.class})
@@ -45,4 +47,6 @@ public class UmsUser {
     private Short sex;
 
     private Integer init;
+
+    private String avator;
 }

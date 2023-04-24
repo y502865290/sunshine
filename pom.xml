@@ -14,6 +14,7 @@
         <module>sunshine-user</module>
         <module>common</module>
         <module>sunshine-medical</module>
+        <module>third-party</module>
     </modules>
 
     <properties>
@@ -63,7 +64,9 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
+                <type>pom</type>
                 <version>${spring.cloud.version}</version>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
