@@ -1,10 +1,12 @@
 package neu.homework.sunshine.ums.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import jakarta.annotation.Resource;
 import neu.homework.sunshine.common.domain.*;
+import neu.homework.sunshine.common.to.UserTo;
 import neu.homework.sunshine.common.util.JsonUtil;
 import neu.homework.sunshine.common.util.JWTUtil;
 import neu.homework.sunshine.ums.domain.UmsUser;
@@ -17,7 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -45,11 +49,13 @@ public class UmsUserService implements neu.homework.sunshine.ums.service.interfa
         }
         /**
          * 注册
+         * 普通用户默认账号开启
+         * 医生用户需要审核后开启
          */
         if(umsUser.getType() == 2){
-            umsUser.setStatus((short) 1);
+            umsUser.setStatus((short) 2);
         }else {
-            umsUser.setStatus((short)0);
+            umsUser.setStatus((short) 1);
         }
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String encode = encoder.encode(umsUser.getPassword());
@@ -100,6 +106,9 @@ public class UmsUserService implements neu.homework.sunshine.ums.service.interfa
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         boolean match = bCryptPasswordEncoder.matches(umsUser.getPassword(), targetEncode);
         if(match){
+            if(target.getStatus() == 0){
+                return ServiceResult.warning().setMessage("您的账号在审核中或者已经关停").setData(null);
+            }
             target.setPassword("");
             ServiceResult token = JWTUtil.getToken(Map.of(JWTUtil.keys[0],target.getId().toString()), JWTUtil.asymmetric);
             return ServiceResult.ok().setMessage("登录成功")
@@ -169,7 +178,7 @@ public class UmsUserService implements neu.homework.sunshine.ums.service.interfa
     }
 
     @Override
-    public ServiceResult uploadAvator(MultipartFile file, String token) throws ProcessException {
+    public ServiceResult uploadAvatar(MultipartFile file, String token) throws ProcessException {
         ServiceResult verifyResult = JWTUtil.verify(token,JWTUtil.asymmetric);
         Map<String,Object> verifyData = (Map<String, Object>) verifyResult.getData();
         if(!verifyData.get("result").equals(JWTUtil.TOKEN_VALID)){
@@ -181,26 +190,43 @@ public class UmsUserService implements neu.homework.sunshine.ums.service.interfa
                 throw new ProcessException("ERROR:无法获取用户id");
             }
             String fileName = userId + ".jpg";
-            Result result = ftpClient.upload(file, FTPDirectory.USER_AVATOR,fileName);
+            Result result = ftpClient.upload(file, FTPDirectory.USER_AVATAR,fileName);
             if (result.getCode().equals(ResultCode.SUCCESS.getCode())){
-                String avatorUrl = (String) result.getData();
-                UmsUser updateAvator = new UmsUser();
-                updateAvator.setAvator(avatorUrl);
-                updateAvator.setId(userId);
-                int updateResult = userMapper.updateById(updateAvator);
+                String avatarUrl = (String) result.getData();
+                UmsUser updateAvatar = new UmsUser();
+                updateAvatar.setAvatar(avatarUrl);
+                updateAvatar.setId(userId);
+                int updateResult = userMapper.updateById(updateAvatar);
                 if(updateResult == 1){
-                    return ServiceResult.ok().setData(avatorUrl).setMessage("上传头像成功");
+                    return ServiceResult.ok().setData(avatarUrl).setMessage("上传头像成功");
                 }else {
-                    Result deleteResult = ftpClient.delete(FTPDirectory.USER_AVATOR,fileName);
+                    Result deleteResult = ftpClient.delete(FTPDirectory.USER_AVATAR,fileName);
                     if(deleteResult.getCode().equals(ResultCode.SUCCESS.getCode())){
-                        throw new ProcessException("用户id为" + userId + ":上传头像失败，数据库更新失败，文件已经删除");
+                        throw new ProcessException("用户id为" + userId + ":上传头像成功，数据库更新失败，文件已经删除");
                     }else {
-                        throw new ProcessException("用户id为" + userId + ":上传头像失败，数据库更新失败，文件未删除");
+                        logger.error("用户id为" + userId + ":上传头像成功，数据库更新失败，文件未删除");
+                        throw new ProcessException("用户id为" + userId + ":上传头像成功，数据库更新失败，文件未删除");
                     }
                 }
             }else {
                 return ServiceResult.error().setMessage(result.getMessage());
             }
         }
+    }
+
+    @Override
+    public ServiceResult getUserListByUserIdList(List<Long> idList) {
+        List<UmsUser> umsUserList = userMapper.selectList(
+                new LambdaQueryWrapper<UmsUser>().in(UmsUser::getId,idList)
+        );
+        List<UserTo> userToList = new ArrayList<>();
+        umsUserList.forEach(item -> {
+            UserTo to = new UserTo();
+            to.setSex(item.getSex());
+            to.setSurname(item.getSurname());
+            to.setId(item.getId());
+            userToList.add(to);
+        });
+        return ServiceResult.ok().setData(userToList);
     }
 }

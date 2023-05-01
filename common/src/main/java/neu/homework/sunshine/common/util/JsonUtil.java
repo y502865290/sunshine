@@ -5,6 +5,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 
+import java.util.LinkedHashMap;
+
 public class JsonUtil {
 
 
@@ -28,5 +30,10 @@ public class JsonUtil {
             throw new RuntimeException(e);
         }
         return result;
+    }
+
+    public static <T> T parseLinkedHashMapToClass(LinkedHashMap map,Class<T> c){
+        String json = JsonUtil.toJson(map);
+        return JsonUtil.toClass(json,c);
     }
 }

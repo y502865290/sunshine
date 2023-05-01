@@ -29,9 +29,18 @@ public class UmsUser {
     @NotBlank(message = "电话不能为空",groups = {UpdateGroup.class})
     private String phone;
 
+    /**
+     * 1：医生
+     * 2：普通用户
+     */
     @NotNull(message = "类型不能为空",groups = {AddGroup.class})
     private Short type;
 
+    /**
+     * 2：账号正常
+     * 1：该账号是医生账号，并且该医生未提交审核材料或者，材料审核中
+     * 0：账号关停
+     */
     private Short status;
 
     @NotBlank(message = "昵称不能为空",groups = {UpdateGroup.class})
@@ -43,10 +52,18 @@ public class UmsUser {
     @NotBlank(message = "姓氏不能为空",groups = {UpdateGroup.class})
     private String surname;
 
+    /**
+     * 0：女
+     * 1：男
+     */
     @NotNull(message = "性别不能为空",groups = {UpdateGroup.class})
     private Short sex;
 
+    /**
+     * 0：未初始化
+     * 1：已经初始化
+     */
     private Integer init;
 
-    private String avator;
+    private String avatar;
 }

@@ -5,6 +5,8 @@ import neu.homework.sunshine.common.domain.ServiceResult;
 import neu.homework.sunshine.ums.domain.UmsUser;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface UmsUserService {
     public ServiceResult signUp(UmsUser umsUser);
 
@@ -18,5 +20,7 @@ public interface UmsUserService {
 
     public ServiceResult getUserInfoByToken(String token);
 
-    ServiceResult uploadAvator(MultipartFile file, String token) throws ProcessException;
+    public ServiceResult uploadAvatar(MultipartFile file, String token) throws ProcessException;
+
+    public ServiceResult getUserListByUserIdList(List<Long> idList);
 }

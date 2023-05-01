@@ -130,4 +130,6 @@ public class MmsSicknessService implements neu.homework.sunshine.medical.service
         detail.setMain(main);
         return ServiceResult.ok().setData(detail);
     }
+
+
 }

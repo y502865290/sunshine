@@ -1,48 +1,96 @@
 package neu.homework.sunshine.common.util;
 
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import neu.homework.sunshine.common.domain.ServiceResult;
 import neu.homework.sunshine.common.domain.ServiceResultCode;
 
+import java.net.http.HttpRequest;
 import java.security.Key;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class JWTUtil {
 
-    private static final Integer expires;
+    /**
+     * accessToken的过期时间，单位是分钟
+     */
+    private static final Integer expires = 30;
 
-    private static final Integer refresh;
+    /**
+     * refreshToken的过期时间，单位是小时
+     */
+    private static final Integer refresh = 24;
 
+    /**
+     * 非对称加密的私钥,非对称加密的密匙是用的时候才能生成
+     */
     private static final PrivateKey privateKey;
 
+    /**
+     * 非对称加密的公钥，非对称加密的密匙是用的时候才能生成
+     */
     private static final PublicKey publicKey;
 
-    private static Key secretKey;
+    /**
+     * 对称加密是密匙
+     */
+    private static final Key secretKey;
 
+    /**
+     * 对称加密的key，该key是base64编码后的，使用的时候需要解码
+     */
+    private static final String secretKeyEncode = "lJHospW0FwTnDG8JOPzPV2VkPvE4K9fcy+sGNuOXCMc=";
+
+    /**
+     * token中payload的key的list
+     */
     public final static String[] keys = new String[]{"userId"};
 
+    /**
+     * token过期
+     */
     public final static String TOKEN_EXPIRES = "token过期";
 
+    /**
+     * token无效
+     */
     public final static String TOKEN_INVALID = "token验证失败";
 
+    /**
+     * token有效
+     */
     public final static String TOKEN_VALID = "token有效";
 
-    public final static boolean asymmetric = true;
+    /**
+     * 是否使用非对称加密
+     */
+    public final static boolean asymmetric = false;
+
+    /**
+     * 非对称加密的算法
+     */
+    private final static SignatureAlgorithm asymmetricAlgorithm = SignatureAlgorithm.RS256;
+
+    /**
+     * 对称加密的算法
+     */
+    private final static SignatureAlgorithm symmetricAlgorithm = SignatureAlgorithm.HS256;
 
 
 
     static {
-        KeyPair keyPair = Keys.keyPairFor(SignatureAlgorithm.RS256);
+        KeyPair keyPair = Keys.keyPairFor(asymmetricAlgorithm);
         privateKey = keyPair.getPrivate();
         publicKey = keyPair.getPublic();
-        expires = 30;
-        refresh = 24;
+        byte[] bytes = Decoders.BASE64.decode(secretKeyEncode);
+        secretKey = Keys.hmacShaKeyFor(bytes);
     }
 
 
@@ -57,11 +105,11 @@ public class JWTUtil {
         JwtBuilder refreshTokenBuilder = null;
         refreshTokenBuilder = Jwts.builder().setClaims(data).setExpiration(new Date(refreshExpiresTime));
         if(asymmetric){
-            accessTokenBuilder = accessTokenBuilder.signWith(privateKey,SignatureAlgorithm.RS256);
-            refreshTokenBuilder = refreshTokenBuilder.signWith(privateKey,SignatureAlgorithm.RS256);
+            accessTokenBuilder = accessTokenBuilder.signWith(privateKey,asymmetricAlgorithm);
+            refreshTokenBuilder = refreshTokenBuilder.signWith(privateKey,asymmetricAlgorithm);
         }else {
-            accessTokenBuilder = accessTokenBuilder.signWith(secretKey);
-            refreshTokenBuilder = refreshTokenBuilder.signWith(secretKey);
+            accessTokenBuilder = accessTokenBuilder.signWith(secretKey,symmetricAlgorithm);
+            refreshTokenBuilder = refreshTokenBuilder.signWith(secretKey,symmetricAlgorithm);
         }
         String access = accessTokenBuilder.compact();
         String refresh = refreshTokenBuilder.compact();
@@ -70,6 +118,8 @@ public class JWTUtil {
         result.put("expiresTime",String.valueOf(expiresTime));
         return ServiceResult.ok().setData(result);
     }
+
+
 
     public static Long getUserId(String token,boolean asymmetric){
         ServiceResult verify = verify(token,asymmetric);

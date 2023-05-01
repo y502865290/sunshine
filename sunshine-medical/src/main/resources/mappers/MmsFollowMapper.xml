@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="neu.homework.sunshine.medical.mapper.MmsFollowMapper">
+
+    <select id="getByUserId" resultMap="getByUserIdMap">
+        SELECT * FROM `mms_follow` WHERE `user` = #{userId}
+    </select>
+
+    <resultMap id="getByUserIdMap" type="MmsFollow">
+        <id property="id" column="id"></id>
+        <result property="user" column="user"></result>
+        <result property="subject" column="subject"></result>
+        <association property="subjectDetail" column="subject" select="neu.homework.sunshine.medical.mapper.MmsSubjectMapper.getById">
+
+        </association>
+    </resultMap>
+</mapper>

@@ -19,4 +19,7 @@ public interface MmsSicknessService {
     public ServiceResult searchWithKeywordByEs(String keyword,Integer pageNum);
 
     public ServiceResult getSicknessDetail(Long id);
+
+
+
 }

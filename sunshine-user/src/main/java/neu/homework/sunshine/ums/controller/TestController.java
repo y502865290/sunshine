@@ -2,6 +2,7 @@ package neu.homework.sunshine.ums.controller;
 
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import neu.homework.sunshine.common.domain.Headers;
 import neu.homework.sunshine.common.domain.Result;
 import neu.homework.sunshine.common.validate.Check;
 import neu.homework.sunshine.ums.service.interfaces.UmsUserService;
@@ -25,22 +26,9 @@ public class TestController {
     public Result test(HttpServletRequest request){
         HashMap<String,String> data = new HashMap<>();
         data.put("data","hello world");
-        data.put("token",request.getHeader("access-token"));
+        data.put("token",request.getHeader(Headers.ACCESS_TOKEN));
         return Result.ok().setData(data);
     }
 
-    @PostMapping("/upload")
-    public Result upload(@RequestParam("file") MultipartFile multipartFile){
-        String fileName = "testLoad" + System.currentTimeMillis() + ".jpg";
-        String dir = "D:\\code\\java\\sunshine\\sunshine-user\\src\\main\\resources\\static\\image";
-        File tmp = new File(dir);
-        String resourcesPath = tmp + "//" + fileName;
-        File upFile = new File(resourcesPath);
-        try {
-            multipartFile.transferTo(upFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return Result.ok().setMessage("上传成功").setData("http://localhost:7000/res/image/" + fileName);
-    }
+
 }

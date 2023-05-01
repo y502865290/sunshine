@@ -3,14 +3,12 @@ package neu.homework.sunshine.ums.controller;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import neu.homework.sunshine.common.domain.Headers;
 import neu.homework.sunshine.common.domain.ProcessException;
 import neu.homework.sunshine.common.domain.Result;
 import neu.homework.sunshine.common.domain.ServiceResult;
 import neu.homework.sunshine.common.util.JsonUtil;
-import neu.homework.sunshine.common.validate.AddGroup;
-import neu.homework.sunshine.common.validate.Check;
-import neu.homework.sunshine.common.validate.UpdateGroup;
-import neu.homework.sunshine.common.validate.Validate;
+import neu.homework.sunshine.common.validate.*;
 import neu.homework.sunshine.ums.domain.UmsUser;
 import neu.homework.sunshine.ums.service.interfaces.UmsUserService;
 import org.springframework.stereotype.Controller;
@@ -18,6 +16,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/ums/user")
@@ -87,10 +87,10 @@ public class UmsUserController {
     @Check
     public Result getUserInfo(HttpServletRequest request){
         String token = null;
-        String accessToken = request.getHeader("access-token");
+        String accessToken = request.getHeader(Headers.ACCESS_TOKEN);
         token = accessToken;
         if(accessToken == null || "".equals(accessToken)){
-            token = request.getHeader("refresh-token");
+            token = request.getHeader(Headers.REFRESH_TOKEN);
         }
         if(token == null || "".equals(token)){
             return Result.tokenInvalid();
@@ -99,21 +99,29 @@ public class UmsUserController {
         return Validate.checkServiceAndGetResult(serviceResult);
     }
 
-    @PostMapping("/uploadAvator")
+    @PostMapping("/uploadAvatar")
     @ResponseBody
     @Check
-    public Result uploadAvator(@RequestParam("file") MultipartFile multipartFile,HttpServletRequest request) throws ProcessException {
+    public Result uploadAvatar(@RequestParam("file") MultipartFile multipartFile,HttpServletRequest request) throws ProcessException {
         if (multipartFile == null){
             return Result.requestError();
         }
-        String token = request.getHeader("access-token");
+        String token = request.getHeader(Headers.ACCESS_TOKEN);
         if(token == null || "".equals(token)){
-            token = request.getHeader("refresh-token");
+            token = request.getHeader(Headers.REFRESH_TOKEN);
         }
         if(token == null || "".equals(token)){
             return Result.tokenInvalid();
         }
-        ServiceResult uploadResult = userService.uploadAvator(multipartFile,token);
+        ServiceResult uploadResult = userService.uploadAvatar(multipartFile,token);
         return Validate.checkServiceAndGetResult(uploadResult);
+    }
+
+    @GetMapping("/getUserListByUserIdList")
+    @ResponseBody
+    @FeignMethod
+    public Result getUserListByUserIdList(@RequestParam("idList") List<Long> idList){
+        ServiceResult serviceResult = userService.getUserListByUserIdList(idList);
+        return Validate.checkServiceAndGetResult(serviceResult);
     }
 }

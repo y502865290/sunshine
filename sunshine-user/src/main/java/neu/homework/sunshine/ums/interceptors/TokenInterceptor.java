@@ -3,6 +3,7 @@ package neu.homework.sunshine.ums.interceptors;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import neu.homework.sunshine.common.domain.Headers;
 import neu.homework.sunshine.common.domain.Result;
 import neu.homework.sunshine.common.domain.ServiceResult;
 import neu.homework.sunshine.common.domain.ServiceResultCode;
@@ -29,7 +30,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         if(request.getMethod().equals("OPTIONS")){
             return true;
         }
-        String token = request.getHeader("access-token");
+        String token = request.getHeader(Headers.ACCESS_TOKEN);
         if(!(handler instanceof HandlerMethod handlerMethod)){
             return true;
         }
@@ -55,7 +56,7 @@ public class TokenInterceptor implements HandlerInterceptor {
             writer.close();
             return false;
         }else if(message.get("result").equals(JWTUtil.TOKEN_EXPIRES)){
-            String refreshToken = request.getHeader("refresh-token");
+            String refreshToken = request.getHeader(Headers.REFRESH_TOKEN);
             if(refreshToken == null || "".equals(refreshToken)){
                 Result r = Result.tokenExpires();
                 PrintWriter writer = response.getWriter();
@@ -67,9 +68,9 @@ public class TokenInterceptor implements HandlerInterceptor {
                 if(refreshTokenResult.getCode().equals(ServiceResultCode.SUCCESS.getCode())){
                     ServiceResult newToken = JWTUtil.renewal(refreshToken, JWTUtil.asymmetric);
                     Map<String,String> newTokenResult = (Map<String, String>) newToken.getData();
-                    response.setHeader("access-token",newTokenResult.get("accessToken"));
-                    response.setHeader("refresh-token",newTokenResult.get("refreshToken"));
-                    response.setHeader("token-expires",newTokenResult.get("expiresTime"));
+                    response.setHeader(Headers.ACCESS_TOKEN,newTokenResult.get("accessToken"));
+                    response.setHeader(Headers.REFRESH_TOKEN,newTokenResult.get("refreshToken"));
+                    response.setHeader(Headers.TOKEN_EXPIRES_TIME,newTokenResult.get("expiresTime"));
                     response.setHeader("Access-Control-Expose-Headers","access-token,refresh-token,token-expires");
                     return true;
                 }else if(refreshTokenResult.getCode().equals(ServiceResultCode.TOKEN_EXPIRES.getCode())){

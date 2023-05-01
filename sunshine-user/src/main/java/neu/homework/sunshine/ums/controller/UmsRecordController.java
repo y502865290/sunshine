@@ -2,6 +2,7 @@ package neu.homework.sunshine.ums.controller;
 
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import neu.homework.sunshine.common.domain.Headers;
 import neu.homework.sunshine.common.domain.Result;
 import neu.homework.sunshine.common.domain.ServiceResult;
 import neu.homework.sunshine.common.validate.AddGroup;
@@ -49,9 +50,9 @@ public class UmsRecordController {
     @GetMapping("/getRecordByToken")
     @Check
     public Result getRecord(HttpServletRequest request){
-        String token = request.getHeader("access-token");
+        String token = request.getHeader(Headers.ACCESS_TOKEN);
         if(token == null || "".equals(token)){
-            token = request.getHeader("refresh-token");
+            token = request.getHeader(Headers.REFRESH_TOKEN);
         }
         if(token == null || "".equals(token)){
             return Result.tokenInvalid();

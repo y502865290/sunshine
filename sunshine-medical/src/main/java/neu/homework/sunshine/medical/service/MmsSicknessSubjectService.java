@@ -28,6 +28,13 @@ public class MmsSicknessSubjectService implements neu.homework.sunshine.medical.
         return ServiceResult.ok().setData(result);
     }
 
+    /**
+     *
+     * @param sickness
+     * @return
+     * list是subject的id的list
+     * string是将所属subject组成一个string，例如：皮肤科/感染科
+     */
     @Override
     public ServiceResult getBySickness(Long sickness) {
         List<MmsSicknessSubject> mmsSicknessSubjects = sicknessSubjectMapper.getBySicknessWithSubject(sickness);

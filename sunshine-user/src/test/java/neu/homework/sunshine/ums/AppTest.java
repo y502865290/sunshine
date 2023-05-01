@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.security.KeyPair;
@@ -28,11 +29,9 @@ public class AppTest extends TestCase {
 
     @Test
     public void testJWT(){
-        KeyPair keyPair = Keys.keyPairFor(SignatureAlgorithm.RS256);
-        String privateKey = Encoders.BASE64.encode(keyPair.getPrivate().getEncoded());
-        String publicKey = Encoders.BASE64.encode(keyPair.getPublic().getEncoded());
-        System.out.println(privateKey);
-        System.out.println(publicKey);
+        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+
+        System.out.println(Encoders.BASE64.encode(key.getEncoded()));
     }
 
 
