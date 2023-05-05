@@ -26,11 +26,7 @@ public abstract class Logger {
     private PrintWriter errorWriter;
 
     public Logger(){
-        initPath();
-        allWriter = getWriter(dir,fileName + LogPath.ALL_SUFFIX);
-        warningWriter = getWriter(dir,fileName + LogPath.WARNING_SUFFIX);
-        errorWriter = getWriter(dir,fileName + LogPath.ERROR_SUFFIX);
-        infoWriter = getWriter(dir,fileName + LogPath.INFO_SUFFIX);
+
     }
 
     public void setPath(String dir,String fileName){
@@ -88,24 +84,29 @@ public abstract class Logger {
     }
 
     public void warning(String log){
+        warningWriter = getWriter(dir,fileName + LogPath.WARNING_SUFFIX);
         log = "[WARNING] -> " + log;
         all(log);
         log(log,warningWriter);
     }
 
     public void info(String log){
+        infoWriter = getWriter(dir,fileName + LogPath.INFO_SUFFIX);
         log = "[INFO]    -> " + log;
         all(log);
         log(log,infoWriter);
     }
 
     public void error(String log){
+        errorWriter = getWriter(dir,fileName + LogPath.ERROR_SUFFIX);
         log = "[ERROR]   -> " + log;
         all(log);
         log(log,errorWriter);
     }
 
     private void all(String log){
+        initPath();
+        allWriter = getWriter(dir,fileName + LogPath.ALL_SUFFIX);
         log(log,allWriter);
     }
 

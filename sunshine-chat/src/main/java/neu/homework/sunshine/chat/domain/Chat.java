@@ -11,4 +11,30 @@ public class Chat {
     private Long id;
 
     private Long to;
+
+    private Integer ack;
+
+    private Object data;
+
+    private static final Integer SUCCESS = 200;
+
+    private static final Integer ERROR = 300;
+
+    public static Chat ok(){
+        Chat c = new Chat();
+        c.setAck(SUCCESS);
+        return new Chat();
+    }
+
+    public static Chat error(){
+        Chat c = new Chat();
+        c.setAck(ERROR);
+        return new Chat();
+    }
+
+    public Chat putData(Object data){
+        this.data = data;
+        return this;
+    }
+
 }

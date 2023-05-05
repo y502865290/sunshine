@@ -17,6 +17,11 @@ public class BaseLogger extends Logger{
         super.setPath(myDir,myFileName);
     }
 
+    /**
+     * 该方法会调用系统logger，在系统日志中也打印日志，并且通过class对象展示哪个类打印的日志
+     * @param log
+     * @param c
+     */
     @Override
     public void error(String log,Class c){
         super.error(log);
@@ -24,6 +29,11 @@ public class BaseLogger extends Logger{
         SystemLogger.systemError(log);
     }
 
+    /**
+     * 该方法会调用系统logger，在系统日志中也打印日志，并且通过class对象展示哪个类打印的日志
+     * @param log
+     * @param c 打印日志的类的class对象
+     */
     @Override
     public void warning(String log,Class c) {
         super.warning(log);
@@ -31,6 +41,11 @@ public class BaseLogger extends Logger{
         SystemLogger.systemWarning(log);
     }
 
+    /**
+     * 该方法会调用系统logger，在系统日志中也打印日志，并且通过class对象展示哪个类打印的日志
+     * @param log
+     * @param c
+     */
     @Override
     public void info(String log,Class c){
         super.info(log);
