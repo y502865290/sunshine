@@ -9,7 +9,14 @@ import neu.homework.sunshine.common.validate.UpdateGroup;
 
 @Data
 public class UserTo {
+
     private Long id;
+
     private String surname;
+
     private Short sex;
+
+    private String nickname;
+
+    private Short type;
 }

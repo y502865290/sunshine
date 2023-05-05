@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ExceptionController {
 
-    private final static Logger logger = LoggerFactory.getLogger(ExceptionController.class);
-
     @ExceptionHandler({ProcessException.class})
     public Result returnError(ProcessException e){
         e.printStackTrace();
@@ -22,7 +20,6 @@ public class ExceptionController {
         if(e.getE() != null){
             e.getE().printStackTrace();
         }
-        logger.error(e.getMessage());
         return Result.error().setMessage(message);
     }
 }

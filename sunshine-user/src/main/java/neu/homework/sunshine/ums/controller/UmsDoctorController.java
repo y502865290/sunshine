@@ -82,7 +82,7 @@ public class UmsDoctorController {
         return Validate.checkServiceAndGetResult(serviceResult);
     }
 
-    @GetMapping("/getByUserIdList")
+    @GetMapping("/feign/getByUserIdList")
     @FeignMethod
     public Result getByUserIdList(@RequestParam("idList") List<Long> idList){
         ServiceResult serviceResult = doctorService.getByUserIdList(idList);

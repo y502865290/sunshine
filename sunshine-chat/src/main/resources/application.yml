@@ -1,0 +1,14 @@
+server:
+  port: 7005
+spring:
+  application:
+    name: sunshine-chat
+  cloud:
+    polaris:
+      address: grpc://139.180.132.199:5002
+      namespace: default
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://2001:19f0:4401:e48:5400:04ff:fe5d:6801:5000/sunshine_chat?useUnicode=true&characterEncoding=utf8
+    password: root
+    username: root

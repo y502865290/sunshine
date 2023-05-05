@@ -15,6 +15,7 @@
         <module>common</module>
         <module>sunshine-medical</module>
         <module>third-party</module>
+        <module>sunshine-chat</module>
     </modules>
 
     <properties>

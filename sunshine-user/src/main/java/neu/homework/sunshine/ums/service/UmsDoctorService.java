@@ -27,7 +27,6 @@ public class UmsDoctorService implements neu.homework.sunshine.ums.service.inter
     private UmsDoctorMapper doctorMapper;
 
 
-    private static final Logger logger = LoggerFactory.getLogger(UmsDoctorService.class);
 
     @Override
     public ServiceResult addDoctorInfo(UmsDoctor umsDoctor) {
@@ -90,7 +89,6 @@ public class UmsDoctorService implements neu.homework.sunshine.ums.service.inter
                 if(deleteResult.getCode().equals(ResultCode.SUCCESS.getCode())){
                     throw new ProcessException("上传图片成功，更新数据库失败，图片已删除");
                 }else {
-                    logger.error("用户id为-"+userId + ":上传图片成功，更新数据库失败，图片未删除");
                     throw new ProcessException("上传图片成功，更新数据库失败，图片未删除");
                 }
             }

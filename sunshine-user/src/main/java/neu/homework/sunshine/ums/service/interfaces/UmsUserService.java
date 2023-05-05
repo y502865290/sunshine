@@ -23,4 +23,6 @@ public interface UmsUserService {
     public ServiceResult uploadAvatar(MultipartFile file, String token) throws ProcessException;
 
     public ServiceResult getUserListByUserIdList(List<Long> idList);
+
+    public ServiceResult getById(Long id);
 }

@@ -36,7 +36,6 @@ public class FtpUtil {
 
     private static final String domain = "http://sunshine.douyacai.xyz/static";
 
-    private static Logger logger = LoggerFactory.getLogger(FtpUtil.class);
 
     @Value("${ftp.host}")
     private String preHost;
@@ -120,7 +119,6 @@ private static void changeWorkingDirectory(FTPClient ftpClient, String workingDi
                     try {
                         ftp.disconnect();
                     } catch (IOException e) {
-                        logger.error("ftp断开失败");
                         throw new ProcessException("ftp断开失败",e);
                     }
                 }
@@ -147,7 +145,6 @@ private static void changeWorkingDirectory(FTPClient ftpClient, String workingDi
             try {
                 inputStream.close();
             } catch (IOException e) {
-                logger.error("ftp上传文件关闭输入流失败");
                 throw new ProcessException("ftp上传文件关闭输入流失败",e);
             }
             close(ftp);

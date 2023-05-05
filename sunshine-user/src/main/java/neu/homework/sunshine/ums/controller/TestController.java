@@ -6,6 +6,8 @@ import neu.homework.sunshine.common.domain.Headers;
 import neu.homework.sunshine.common.domain.Result;
 import neu.homework.sunshine.common.validate.Check;
 import neu.homework.sunshine.ums.service.interfaces.UmsUserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,13 +23,12 @@ public class TestController {
     @Resource
     private UmsUserService userService;
 
+    private static final Logger logger = LoggerFactory.getLogger(TestController.class);
+
     @GetMapping("/test")
-    @Check
     public Result test(HttpServletRequest request){
-        HashMap<String,String> data = new HashMap<>();
-        data.put("data","hello world");
-        data.put("token",request.getHeader(Headers.ACCESS_TOKEN));
-        return Result.ok().setData(data);
+        logger.error("你在干什么");
+        return Result.ok();
     }
 
 

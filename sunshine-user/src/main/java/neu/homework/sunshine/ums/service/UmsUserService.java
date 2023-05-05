@@ -9,6 +9,7 @@ import neu.homework.sunshine.common.domain.*;
 import neu.homework.sunshine.common.to.UserTo;
 import neu.homework.sunshine.common.util.JsonUtil;
 import neu.homework.sunshine.common.util.JWTUtil;
+import neu.homework.sunshine.common.validate.FeignMethod;
 import neu.homework.sunshine.ums.domain.UmsUser;
 import neu.homework.sunshine.ums.feign.FtpClient;
 import neu.homework.sunshine.ums.mapper.UmsUserMapper;
@@ -32,8 +33,6 @@ public class UmsUserService implements neu.homework.sunshine.ums.service.interfa
 
     @Resource
     private FtpClient ftpClient;
-
-    private static final Logger logger = LoggerFactory.getLogger(UmsUserService.class);
 
     @Override
     public ServiceResult signUp(UmsUser umsUser) {
@@ -204,8 +203,7 @@ public class UmsUserService implements neu.homework.sunshine.ums.service.interfa
                     if(deleteResult.getCode().equals(ResultCode.SUCCESS.getCode())){
                         throw new ProcessException("用户id为" + userId + ":上传头像成功，数据库更新失败，文件已经删除");
                     }else {
-                        logger.error("用户id为" + userId + ":上传头像成功，数据库更新失败，文件未删除");
-                        throw new ProcessException("用户id为" + userId + ":上传头像成功，数据库更新失败，文件未删除");
+                       throw new ProcessException("用户id为" + userId + ":上传头像成功，数据库更新失败，文件未删除");
                     }
                 }
             }else {
@@ -215,6 +213,7 @@ public class UmsUserService implements neu.homework.sunshine.ums.service.interfa
     }
 
     @Override
+    @FeignMethod
     public ServiceResult getUserListByUserIdList(List<Long> idList) {
         List<UmsUser> umsUserList = userMapper.selectList(
                 new LambdaQueryWrapper<UmsUser>().in(UmsUser::getId,idList)
@@ -228,5 +227,18 @@ public class UmsUserService implements neu.homework.sunshine.ums.service.interfa
             userToList.add(to);
         });
         return ServiceResult.ok().setData(userToList);
+    }
+
+    @Override
+    @FeignMethod
+    public ServiceResult getById(Long id) {
+        UmsUser user = userMapper.selectById(id);
+        UserTo userTo = new UserTo();
+        userTo.setId(user.getId());
+        userTo.setSex(user.getSex());
+        userTo.setSurname(user.getSurname());
+        userTo.setNickname(user.getNickname());
+        userTo.setType(user.getType());
+        return ServiceResult.ok().setData(userTo);
     }
 }

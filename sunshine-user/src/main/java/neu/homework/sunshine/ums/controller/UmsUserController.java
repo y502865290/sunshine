@@ -117,11 +117,19 @@ public class UmsUserController {
         return Validate.checkServiceAndGetResult(uploadResult);
     }
 
-    @GetMapping("/getUserListByUserIdList")
+    @GetMapping("/feign/getUserListByUserIdList")
     @ResponseBody
     @FeignMethod
     public Result getUserListByUserIdList(@RequestParam("idList") List<Long> idList){
         ServiceResult serviceResult = userService.getUserListByUserIdList(idList);
+        return Validate.checkServiceAndGetResult(serviceResult);
+    }
+
+    @GetMapping("/feign/getUserById")
+    @ResponseBody
+    @FeignMethod
+    public Result getUserById(@RequestParam("id") Long id){
+        ServiceResult serviceResult = userService.getById(id);
         return Validate.checkServiceAndGetResult(serviceResult);
     }
 }

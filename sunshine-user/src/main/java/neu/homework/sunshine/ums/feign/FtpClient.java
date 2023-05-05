@@ -13,12 +13,12 @@ import org.springframework.web.multipart.MultipartFile;
 @FeignClient("third-party")
 public interface FtpClient {
 
-    @PostMapping(value = "/ftp/upload",consumes = MediaType.MULTIPART_FORM_DATA_VALUE,produces = {"application/json"})
+    @PostMapping(value = "/ftp/feign/upload",consumes = MediaType.MULTIPART_FORM_DATA_VALUE,produces = {"application/json"})
     public Result upload(@RequestPart("file") MultipartFile multipartFile,
                          @RequestParam("dir") String dir,
                          @RequestParam("fileName") String fileName) throws ProcessException;
 
-    @DeleteMapping("/ftp/delete")
+    @DeleteMapping("/ftp/feign/delete")
     public Result delete(@RequestParam("dir") String dir,
                          @RequestParam("fileName") String fileName) throws ProcessException;
 }
