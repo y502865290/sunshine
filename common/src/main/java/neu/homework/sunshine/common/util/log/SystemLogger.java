@@ -18,6 +18,21 @@ public class SystemLogger extends Logger{
         super.setPath(dir,fileName);
     }
 
+    @Override
+    public void error(String log, Class c) {
+
+    }
+
+    @Override
+    public void warning(String log, Class c) {
+
+    }
+
+    @Override
+    public void info(String log, Class c) {
+
+    }
+
     private static void initLogger(){
         if(logger == null){
             logger = new SystemLogger();
@@ -25,14 +40,17 @@ public class SystemLogger extends Logger{
     }
 
     public static void systemWarning(String log){
-        logger.waring(log);
+        initLogger();
+        logger.warning(log);
     }
 
     public static void systemError(String log){
+        initLogger();
         logger.error(log);
     }
 
     public static void systemInfo(String log){
+        initLogger();
         logger.info(log);
     }
 

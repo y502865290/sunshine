@@ -87,7 +87,7 @@ public abstract class Logger {
         writer.println(stringBuilder);
     }
 
-    public void waring(String log){
+    public void warning(String log){
         log = "[WARNING] -> " + log;
         all(log);
         log(log,warningWriter);
@@ -115,4 +115,10 @@ public abstract class Logger {
         warningWriter.close();
         errorWriter.close();
     }
+
+    public abstract void error(String log,Class c);
+
+    public abstract void warning(String log,Class c);
+
+    public abstract void info(String log,Class c);
 }

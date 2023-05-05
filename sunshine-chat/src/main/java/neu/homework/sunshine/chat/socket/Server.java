@@ -76,7 +76,7 @@ public class Server {
         SEVER.addConnectListener(new ConnectListener() {
             @Override
             public void onConnect(SocketIOClient socketIOClient) {
-                logger("UUID为" + socketIOClient.getSessionId() + "已经连接服务器");
+                logger.info("UUID为" + socketIOClient.getSessionId() + "已经连接服务器");
             }
         });
 
