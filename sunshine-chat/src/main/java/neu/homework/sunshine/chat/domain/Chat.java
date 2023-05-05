@@ -9,4 +9,6 @@ public class Chat {
     private MessageItemVo message;
 
     private Long id;
+
+    private Long to;
 }

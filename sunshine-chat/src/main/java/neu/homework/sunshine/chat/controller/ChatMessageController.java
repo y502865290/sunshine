@@ -4,6 +4,7 @@ import jakarta.annotation.Resource;
 import neu.homework.sunshine.chat.service.interfaces.ChatMessageService;
 import neu.homework.sunshine.common.domain.Result;
 import neu.homework.sunshine.common.domain.ServiceResult;
+import neu.homework.sunshine.common.util.log.Logger;
 import neu.homework.sunshine.common.validate.Check;
 import neu.homework.sunshine.common.validate.Validate;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,9 @@ public class ChatMessageController {
     @Resource
     private ChatMessageService messageService;
 
+    @Resource
+    private Logger socketIoServerLogger;
+
     @GetMapping("/getMessageListByMeAndSomeone")
     @Check
     public Result getMessageListByMeAndSomeone(Long me,Long someOne){
@@ -25,5 +29,10 @@ public class ChatMessageController {
         }
         ServiceResult serviceResult = messageService.getMessageListByMeAndSomeone(me,someOne);
         return Validate.checkServiceAndGetResult(serviceResult);
+    }
+
+    @GetMapping("/test")
+    public Result test(){
+        return Result.ok();
     }
 }

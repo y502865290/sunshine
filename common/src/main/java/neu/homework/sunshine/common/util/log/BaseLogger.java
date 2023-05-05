@@ -16,4 +16,22 @@ public class BaseLogger extends Logger{
     public void initPath() {
         super.setPath(myDir,myFileName);
     }
+
+    public void error(String log,Class c){
+        super.error(log);
+        log = c.getName() + " - " + log;
+        SystemLogger.systemError(log);
+    }
+
+    public void waring(String log,Class c) {
+        super.waring(log);
+        log = c.getName() + " - " + log;
+        SystemLogger.systemWarning(log);
+    }
+
+    public void info(String log,Class c){
+        super.info(log);
+        log = c.getName() + " - " + log;
+        SystemLogger.systemInfo(log);
+    }
 }

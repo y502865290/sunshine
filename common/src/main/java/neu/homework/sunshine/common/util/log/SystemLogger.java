@@ -24,8 +24,16 @@ public class SystemLogger extends Logger{
         }
     }
 
-    public static void systemLog(String log) {
-        initLogger();
-        logger.log(log);
+    public static void systemWarning(String log){
+        logger.waring(log);
     }
+
+    public static void systemError(String log){
+        logger.error(log);
+    }
+
+    public static void systemInfo(String log){
+        logger.info(log);
+    }
+
 }

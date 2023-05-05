@@ -10,10 +10,10 @@ import org.springframework.context.annotation.Configuration;
 public class SystemConfig {
 
 
-    @PostConstruct
-    public void initSystem() throws ClassNotFoundException {
-        Class.forName("neu.homework.sunshine.chat.socket.Server");
-    }
+//    @PostConstruct
+//    public void initSystem() throws ClassNotFoundException {
+//        Class.forName("neu.homework.sunshine.chat.socket.Server");
+//    }
 
     @Bean
     public BaseLogger socketIoServerLogger(){
