@@ -23,13 +23,13 @@ public class Chat {
     public static Chat ok(){
         Chat c = new Chat();
         c.setAck(SUCCESS);
-        return new Chat();
+        return c;
     }
 
     public static Chat error(){
         Chat c = new Chat();
         c.setAck(ERROR);
-        return new Chat();
+        return c;
     }
 
     public Chat putData(Object data){

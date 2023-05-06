@@ -12,3 +12,12 @@ spring:
     url: jdbc:mysql://2001:19f0:4401:e48:5400:04ff:fe5d:6801:5000/sunshine_chat?useUnicode=true&characterEncoding=utf8
     password: root
     username: root
+  rabbitmq:
+    host: 139.180.132.199
+    port: 5672
+    virtual-host: /
+    username: guest
+    password: guest
+mybatis-plus:
+  mapper-locations: classpath:mappers/*.xml
+  type-aliases-package: neu.homework.sunshine.chat.domain

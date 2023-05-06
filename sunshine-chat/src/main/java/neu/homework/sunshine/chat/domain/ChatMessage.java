@@ -5,13 +5,17 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import neu.homework.sunshine.common.validate.AddGroup;
 import neu.homework.sunshine.common.validate.UpdateGroup;
 
 import java.util.Date;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @TableName("chat_message")
 public class ChatMessage {
 
@@ -29,9 +33,9 @@ public class ChatMessage {
     private Long receive;
 
     /**
-     * 0:未接收
-     * 1：已接收
-     * 3：已删除
+     * 0:未发送
+     * 1：已发送
+     * 3：已阅读
      */
     private Short status;
 

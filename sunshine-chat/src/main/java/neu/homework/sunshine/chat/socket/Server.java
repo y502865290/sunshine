@@ -6,12 +6,14 @@ import com.corundumstudio.socketio.listener.DataListener;
 import com.corundumstudio.socketio.listener.DisconnectListener;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
-import lombok.Getter;
 import lombok.Setter;
 import neu.homework.sunshine.chat.domain.Chat;
-import neu.homework.sunshine.common.domain.ProcessException;
+import neu.homework.sunshine.chat.domain.ChatMessage;
+import neu.homework.sunshine.chat.vo.MessageItemVo;
+import neu.homework.sunshine.common.domain.RabbitExchange;
+import neu.homework.sunshine.common.util.JsonUtil;
 import neu.homework.sunshine.common.util.log.Logger;
-import org.checkerframework.checker.units.qual.C;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -38,9 +40,17 @@ public class Server {
 
     private static Logger logger;
 
+    private static RabbitTemplate rabbitTemplate;
+
     @Resource
     @Setter
     private Logger socketIoServerLogger;
+
+    @Setter
+    @Resource
+    private RabbitTemplate preRabbitTemplate;
+
+
 
     static {
         Configuration config = new Configuration();
@@ -51,16 +61,19 @@ public class Server {
         SEVER.addNamespace(CHAT_NAMESPACE);
         addInfoEvent();
         addChatEvent();
+        SEVER.start();
     }
 
     @PostConstruct
     public void init(){
         logger = socketIoServerLogger;
+        rabbitTemplate = preRabbitTemplate;
     }
 
     public Server(){
 
     }
+
 
     private static String getUserName(Long id,UUID uuid){
         return "用户(id:"+ id + ",uuid:" + uuid.toString() +")=>";
@@ -92,7 +105,7 @@ public class Server {
         SEVER.getNamespace(INFO_NAMESPACE).addDisconnectListener(new DisconnectListener() {
             @Override
             public void onDisconnect(SocketIOClient socketIOClient) {
-                logger.info("UUID为" + socketIOClient.getSessionId() + "从" + socketIOClient.getNamespace() 
+                logger.info("UUID为" + socketIOClient.getSessionId() + "从" + socketIOClient.getNamespace() .getName()
                         + "命名空间断开连接");
                 Long userId = UUID_INFO_MAP.get(socketIOClient.getSessionId());
                 removeInfoMap(userId,socketIOClient.getSessionId());
@@ -122,7 +135,7 @@ public class Server {
         SEVER.getNamespace(CHAT_NAMESPACE).addDisconnectListener(new DisconnectListener() {
             @Override
             public void onDisconnect(SocketIOClient socketIOClient) {
-                logger.info("UUID为" + socketIOClient.getSessionId() + "从" + socketIOClient.getNamespace()
+                logger.info("UUID为" + socketIOClient.getSessionId() + "从" + socketIOClient.getNamespace().getName()
                         + "命名空间断开连接");
                 String key = UUID_CHAT_MAP.get(socketIOClient.getSessionId());
                 removeChatMap(key,socketIOClient.getSessionId());
@@ -158,7 +171,22 @@ public class Server {
                         client.sendEvent("receiveMessage",callback,chat);
                     }
                 }
-                ackRequest.sendAckData(Chat.ok());
+                /**
+                 * 添加一个消息到消息队列
+                 */
+                ChatMessage mqChatMessage = chat.getMessage().getChatMessage();
+                mqChatMessage.setStatus((short) 1);
+                String mqMessage = JsonUtil.toJson(mqChatMessage);
+                rabbitTemplate.convertAndSend(RabbitExchange.CHAT_MESSAGE_DIRECT,"add",mqMessage);
+                /**
+                 * 返回一个ack表示后端接受到了消息
+                 */
+                Chat res = Chat.ok();
+                MessageItemVo message = new MessageItemVo();
+                message.setStatus((short) 1);
+                message.setTimestamp(chat.getMessage().getTimestamp());
+                res.setMessage(message);
+                ackRequest.sendAckData(res);
             }
         });
     }

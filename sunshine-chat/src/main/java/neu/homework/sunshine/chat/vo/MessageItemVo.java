@@ -37,6 +37,8 @@ public class MessageItemVo {
 
     private Short receiveType;
 
+    private Long timestamp;
+
     public void setChatMessage(ChatMessage chatMessage){
         this.id = chatMessage.getId();
         this.time = chatMessage.getTime();
@@ -45,6 +47,11 @@ public class MessageItemVo {
         this.send = chatMessage.getSend();
         this.receive = chatMessage.getReceive();
         this.status = chatMessage.getStatus();
+    }
+
+    public ChatMessage getChatMessage(){
+        ChatMessage chatMessage = new ChatMessage(id,message,picture,send,receive,status,time);
+        return chatMessage;
     }
 
     public void setSender(UserTo sender){

@@ -19,4 +19,9 @@ public class SystemConfig {
     public BaseLogger socketIoServerLogger(){
         return new BaseLogger(LogPath.CHAT_PATH,LogPath.SOCKET_IO_SERVER);
     }
+
+    @Bean
+    public BaseLogger chatMainLogger(){
+        return new BaseLogger(LogPath.CHAT_PATH,LogPath.CHAT_MAIN);
+    }
 }

@@ -7,9 +7,18 @@ import neu.homework.sunshine.chat.feign.UserFeign;
 import neu.homework.sunshine.chat.mapper.ChatMessageMapper;
 import neu.homework.sunshine.chat.vo.MessageInfoVo;
 import neu.homework.sunshine.chat.vo.MessageItemVo;
+import neu.homework.sunshine.common.domain.RabbitExchange;
+import neu.homework.sunshine.common.domain.RabbitQueue;
 import neu.homework.sunshine.common.domain.ServiceResult;
+import neu.homework.sunshine.common.domain.ServiceResultCode;
 import neu.homework.sunshine.common.to.UserTo;
 import neu.homework.sunshine.common.util.JsonUtil;
+import neu.homework.sunshine.common.util.log.Logger;
+import org.springframework.amqp.core.ExchangeTypes;
+import org.springframework.amqp.rabbit.annotation.Exchange;
+import org.springframework.amqp.rabbit.annotation.Queue;
+import org.springframework.amqp.rabbit.annotation.QueueBinding;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,6 +33,9 @@ public class ChatMessageService implements neu.homework.sunshine.chat.service.in
 
     @Resource
     private UserFeign userFeign;
+
+    @Resource
+    private Logger chatMainLogger;
 
     @Override
     public ServiceResult getMessageListByMeAndSomeone(Long me, Long someone) {
@@ -62,7 +74,30 @@ public class ChatMessageService implements neu.homework.sunshine.chat.service.in
         return ServiceResult.ok().setData(vo);
     }
 
-    private List<MessageItemVo> makeUpMessageItemList(List<ChatMessage> source,UserTo sender,UserTo receiver){
+    @Override
+    public ServiceResult addMessage(ChatMessage message) {
+        int result = messageMapper.insert(message);
+        if(result == 1){
+            return ServiceResult.ok();
+        }
+        return ServiceResult.error();
+    }
+
+    @Override
+    @RabbitListener(bindings = @QueueBinding(
+            value = @Queue(name = RabbitQueue.DIRECT_ADD_CHAT_MESSAGE),
+            exchange = @Exchange(name = RabbitExchange.CHAT_MESSAGE_DIRECT,type = ExchangeTypes.DIRECT),
+            key = {"add"}
+    ))
+    public void addMessage(String message){
+        ChatMessage chatMessage = JsonUtil.toClass(message, ChatMessage.class);
+        ServiceResult result = this.addMessage(chatMessage);
+        if(result.getCode() != ServiceResultCode.SUCCESS.getCode()){
+            chatMainLogger.error("添加消息失败，消息内容为" + message,this.getClass());
+        }
+    }
+
+    private List<MessageItemVo> makeUpMessageItemList(List<ChatMessage> source, UserTo sender, UserTo receiver){
         List<MessageItemVo> result = new ArrayList<>();
         for(ChatMessage item : source){
             MessageItemVo itemVo = new MessageItemVo();
@@ -73,4 +108,6 @@ public class ChatMessageService implements neu.homework.sunshine.chat.service.in
         }
         return result;
     }
+
+
 }

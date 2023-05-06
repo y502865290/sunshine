@@ -84,6 +84,7 @@ public abstract class Logger {
     }
 
     public void warning(String log){
+        initPath();
         warningWriter = getWriter(dir,fileName + LogPath.WARNING_SUFFIX);
         log = "[WARNING] -> " + log;
         all(log);
@@ -91,6 +92,7 @@ public abstract class Logger {
     }
 
     public void info(String log){
+        initPath();
         infoWriter = getWriter(dir,fileName + LogPath.INFO_SUFFIX);
         log = "[INFO]    -> " + log;
         all(log);
@@ -98,6 +100,7 @@ public abstract class Logger {
     }
 
     public void error(String log){
+        initPath();
         errorWriter = getWriter(dir,fileName + LogPath.ERROR_SUFFIX);
         log = "[ERROR]   -> " + log;
         all(log);

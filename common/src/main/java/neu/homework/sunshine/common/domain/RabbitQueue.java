@@ -6,5 +6,5 @@ public class RabbitQueue {
 
     public final static String DIRECT_DELETE_SICKNESS = "direct.delete.sickness";
 
-
+    public final static String DIRECT_ADD_CHAT_MESSAGE = "direct.add.chat.message";
 }

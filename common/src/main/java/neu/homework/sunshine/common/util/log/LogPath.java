@@ -15,6 +15,8 @@ public class LogPath {
 
     public final static String SOCKET_IO_SERVER = "server";
 
+    public final static String CHAT_MAIN = "main";
+
     public final static String SYSTEM_PATH = BASE + "\\system";
 
     public final static String SYSTEM = "system";
